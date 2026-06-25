@@ -30,7 +30,7 @@ setup_info()
 #>                                               version 
 #> "#18~24.04.1-Ubuntu SMP Thu May 28 16:39:11 UTC 2026" 
 #>                                              nodename 
-#>                                        "1a6d3ced6407" 
+#>                                        "e2db3072d0a1" 
 #>                                               machine 
 #>                                              "x86_64" 
 #>                                                 login 
