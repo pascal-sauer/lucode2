@@ -50,5 +50,5 @@ f <- tempfile()
 #> [1] "root"
 #> 
  runstatistics(file = f, submit = tempdir())
-#> Submitted run statistics to /tmp/RtmpAvpIAn 
+#> Submitted run statistics to /tmp/Rtmp5E5fNy 
 ```
