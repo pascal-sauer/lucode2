@@ -8,10 +8,12 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "groupName": "GitHub Actions"
+      "groupName": "GitHub Actions",
+      "dependencyDashboardApproval": true
     }
   ],
   "schedule": ["before 8am on monday"],
+  "minimumReleaseAge": "10 days",
   "automerge": false,
   "postUpgradeTasks": {
     "commands": [
