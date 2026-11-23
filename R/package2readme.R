@@ -2,8 +2,9 @@
 #'
 #' Creates a README.md for a R package.
 #'
-#' Hand written sections below the last generated section of an existing README.md are kept,
-#' e.g. a funding section. They are appended unchanged, everything else comes from the template.
+#' Hand written content below the `<!-- end of generated readme -->` marker of an existing
+#' README.md is kept, e.g. a funding section. It is appended unchanged, everything else
+#' comes from the template.
 #'
 #' @param package either the path to the main folder of a package (containing a DESCRIPTION file)
 #' or the name of the package
@@ -241,24 +242,28 @@ package2readme <- function(package = ".", add = NULL, logo = NULL, logoHeight = 
     return(out)
   }
 
-  keepCustomSections <- function(new, old) {
-    # README.md is written from scratch. Hand written sections below the last generated
-    # section, e.g. a funding section, are taken over from the previous version.
+  appendCustomContent <- function(new, old) {
+    # README.md is written from scratch. Everything below the end marker in the
+    # existing file is hand written and gets appended unchanged.
+    marker <- "<!-- end of generated readme -->"
     newLines <- unlist(strsplit(paste(new, collapse = "\n"), "\n", fixed = TRUE))
-    generated <- trimws(grep("^#{2,} ", newLines, value = TRUE))
-    positions <- grep("^#{2,} ", old)
-    headings <- trimws(old[positions])
-    isCustom <- !(headings %in% generated)
-    # content above the first custom section is generated, so it would only be outdated
-    lastGenerated <- max(c(positions[!isCustom], 0))
-    keep <- isCustom & positions > lastGenerated
-    if (!any(keep)) {
-      return(new)
+    markerPos <- grep(marker, old, fixed = TRUE)
+    if (!length(markerPos) || markerPos[1] >= length(old)) {
+      return(newLines)
     }
-    for (heading in headings[keep]) {
-      message("Kept custom README section: ", sub("^#+ +", "", heading))
+    custom <- old[(markerPos[1] + 1):length(old)]
+    # trim blank lines, they are restored by the separator below
+    while (length(custom) && !nzchar(trimws(custom[1]))) {
+      custom <- custom[-1]
     }
-    return(c(newLines, "", old[min(positions[keep]):length(old)]))
+    while (length(custom) && !nzchar(trimws(custom[length(custom)]))) {
+      custom <- custom[-length(custom)]
+    }
+    if (!length(custom)) {
+      return(newLines)
+    }
+    message("Appended custom README content")
+    return(c(newLines, "", custom))
   }
 
   fillTemplate <- function(x, fill) {
@@ -308,7 +313,7 @@ package2readme <- function(package = ".", add = NULL, logo = NULL, logoHeight = 
   if (!is.null(folder)) {
     readmefile <- file.path(folder, "README.md")
     if (file.exists(readmefile)) {
-      out <- keepCustomSections(out, readLines(readmefile))
+      out <- appendCustomContent(out, readLines(readmefile))
       message("Updated README.md file")
     } else {
       message("Added README.md file")
