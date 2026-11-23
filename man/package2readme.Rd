@@ -21,8 +21,9 @@ or the name of the package}
 Creates a README.md for a R package.
 }
 \details{
-Hand written sections below the last generated section of an existing README.md are kept,
-e.g. a funding section. They are appended unchanged, everything else comes from the template.
+Hand written content below the `<!-- end of generated readme -->` marker of an existing
+README.md is kept, e.g. a funding section. It is appended unchanged, everything else
+comes from the template.
 }
 \examples{
 package2readme("lucode2")
